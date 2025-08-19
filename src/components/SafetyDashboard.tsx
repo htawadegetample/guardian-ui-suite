@@ -20,26 +20,32 @@ const SafetyDashboard = () => {
   const [isConnectedToPLC, setIsConnectedToPLC] = useState(true);
   const [isTimeout, setIsTimeout] = useState(false);
   
-  // Mock safety signals based on your code
+  // Safety signals for 2.3 PLC
   const [inputSignals, setInputSignals] = useState<SafetySignal[]>([
-    { id: "e-stop-0", label: "Emergency Stop 0", currentState: true, category: "Emergency Stops" },
-    { id: "e-stop-1", label: "Emergency Stop 1", currentState: true, category: "Emergency Stops" },
-    { id: "leak-sensor", label: "Leak Sensor", currentState: true, category: "Sensors" },
-    { id: "over-voltage", label: "Over-voltage Protection", currentState: true, category: "Power Protection" },
-    { id: "pod-module-0-epanel", label: "Pod Module 0 Epanel", currentState: true, category: "Interlocks" },
-    { id: "pod-module-0-side-1", label: "Pod Module 0 Side 1", currentState: true, category: "Interlocks" },
-    { id: "pod-module-1-side-1", label: "Pod Module 1 Side 1", currentState: true, category: "Interlocks" },
-    { id: "pod-module-2-side-1", label: "Pod Module 2 Side 1", currentState: true, category: "Interlocks" },
-    { id: "pod-module-2-door", label: "Pod Module 2 Door", currentState: true, category: "Interlocks" },
-    { id: "pod-module-2-side-0", label: "Pod Module 2 Side 0", currentState: true, category: "Interlocks" },
-    { id: "pod-module-1-side-0", label: "Pod Module 1 Side 0", currentState: true, category: "Interlocks" },
-    { id: "pod-module-0-side-0", label: "Pod Module 0 Side 0", currentState: true, category: "Interlocks" },
-    { id: "interlock-enabled", label: "Interlock Enabled", currentState: true, category: "System" },
+    { id: "e-stop-0", label: "E-Stop 0", currentState: true, category: "Emergency Systems" },
+    { id: "e-stop-1", label: "E-Stop 1", currentState: true, category: "Emergency Systems" },
+    { id: "door-interlock-0", label: "Door Interlock 0", currentState: true, category: "Interlocks" },
+    { id: "door-interlock-1", label: "Door Interlock 1", currentState: true, category: "Interlocks" },
+    { id: "e-panel-interlock", label: "E-Panel Interlock", currentState: true, category: "Interlocks" },
+    { id: "flood-warning-sensor", label: "Flood Warning Sensor", currentState: true, category: "Environmental Sensors" },
+    { id: "water-tank-sensor-0", label: "Water Tank Sensor 0", currentState: true, category: "Environmental Sensors" },
+    { id: "water-tank-sensor-1", label: "Water Tank Sensor 1", currentState: true, category: "Environmental Sensors" },
+    { id: "fire-alarm-sensor", label: "Fire Alarm Sensor", currentState: true, category: "Environmental Sensors" },
+    { id: "hold-to-run", label: "Hold To Run", currentState: false, category: "Control Systems" },
+    { id: "over-voltage-protection-0", label: "Over Voltage Protection 0", currentState: true, category: "Power Protection" },
+    { id: "over-voltage-protection-1", label: "Over Voltage Protection 1", currentState: true, category: "Power Protection" },
+    { id: "isolation-detection-charger-0", label: "Isolation Detection Charger 0", currentState: true, category: "Isolation Detection" },
+    { id: "isolation-detection-charger-1", label: "Isolation Detection Charger 1", currentState: true, category: "Isolation Detection" },
+    { id: "isolation-detection-charger-2", label: "Isolation Detection Charger 2", currentState: true, category: "Isolation Detection" },
+    { id: "isolation-detection-charger-3", label: "Isolation Detection Charger 3", currentState: true, category: "Isolation Detection" },
   ]);
 
   const [outputSignals, setOutputSignals] = useState<SafetySignal[]>([
-    { id: "charging-area-power", label: "Charging Area Power", currentState: true, category: "Power Systems" },
-    { id: "motion-area-power", label: "Motion Area Power", currentState: true, category: "Power Systems" },
+    { id: "stage-contactor", label: "Stage Contactor", currentState: true, category: "Contactors" },
+    { id: "pod-contactor", label: "Pod Contactor", currentState: true, category: "Contactors" },
+    { id: "motion-contactor", label: "Motion Contactor", currentState: true, category: "Contactors" },
+    { id: "charger-contactor", label: "Charger Contactor", currentState: true, category: "Contactors" },
+    { id: "isolation-fault-buzzer", label: "Isolation Fault Buzzer", currentState: false, category: "Alarms" },
   ]);
 
   // Calculate overall system status
@@ -53,12 +59,25 @@ const SafetyDashboard = () => {
     })),
     ...inputSignals.map(signal => ({
       label: signal.label,
+      status: signal.id === "hold-to-run" ? !signal.currentState : signal.currentState,
+      errorMessage: signal.label.includes("E-Stop") ? `${signal.label} pressed` : 
+                   signal.label.includes("Interlock") ? `${signal.label} tripped` :
+                   signal.label.includes("Sensor") ? `${signal.label} triggered` :
+                   signal.label.includes("Protection") ? `${signal.label} tripped` :
+                   signal.label.includes("Detection") ? `${signal.label} trigerred` :
+                   signal.id === "hold-to-run" ? "Hold To Run active" :
+                   `${signal.label} fault`
+    })),
+    ...outputSignals.filter(signal => signal.id !== "isolation-fault-buzzer").map(signal => ({
+      label: signal.label,
       status: signal.currentState,
-      errorMessage: signal.label.includes("Emergency Stop") ? `${signal.label} Pressed` : 
-                   signal.label.includes("Sensor") ? `${signal.label} Tripped` :
-                   signal.label.includes("Protection") ? `${signal.label} Triggered` :
-                   `${signal.label} Not Closed`
-    }))
+      errorMessage: `${signal.label} Disabled`
+    })),
+    {
+      label: "Isolation Fault Buzzer",
+      status: !outputSignals.find(s => s.id === "isolation-fault-buzzer")?.currentState,
+      errorMessage: "Isolation Fault Buzzer triggered"
+    }
   ];
 
   const failedConditions = systemConditions.filter(condition => !condition.status);
@@ -116,7 +135,7 @@ const SafetyDashboard = () => {
             <Shield className="w-8 h-8 text-industrial-accent" />
             <div>
               <h1 className="text-3xl font-bold text-foreground">Safety Service Dashboard</h1>
-              <p className="text-muted-foreground">v2.2 - Platform Area Monitoring</p>
+              <p className="text-muted-foreground">v2.3 - Platform Area Monitoring</p>
             </div>
           </div>
           
@@ -165,16 +184,20 @@ const SafetyDashboard = () => {
               <div className="space-y-2">
                 <div className="flex items-center gap-2">
                   <Power className="w-4 h-4 text-industrial-accent" />
-                  <span className="font-medium">Power Systems</span>
+                  <span className="font-medium">Contactors</span>
                 </div>
                 <div className="space-y-1">
-                  {outputSignals.map(signal => (
+                  {outputSignals.filter(signal => signal.category === "Contactors").map(signal => (
                     <SafetyCondition 
                       key={signal.id}
                       label={signal.label} 
                       status={signal.currentState} 
                     />
                   ))}
+                  <SafetyCondition 
+                    label="Isolation Fault Buzzer" 
+                    status={!outputSignals.find(s => s.id === "isolation-fault-buzzer")?.currentState} 
+                  />
                 </div>
               </div>
 
