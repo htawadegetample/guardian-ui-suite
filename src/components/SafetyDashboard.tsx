@@ -46,7 +46,6 @@ const SafetyDashboard = () => {
   const systemConditions = [
     { label: "System Online", status: isOnline, errorMessage: "System Offline" },
     { label: "PLC Connected", status: isConnectedToPLC, errorMessage: "Disconnected from PLC" },
-    { label: "Communication", status: !isTimeout, errorMessage: "Communication Timeout" },
     ...outputSignals.map(signal => ({
       label: signal.label,
       status: signal.currentState,
@@ -160,7 +159,6 @@ const SafetyDashboard = () => {
                 <div className="space-y-1">
                   <SafetyCondition label="System Online" status={isOnline} />
                   <SafetyCondition label="PLC Connected" status={isConnectedToPLC} />
-                  <SafetyCondition label="Communication Active" status={!isTimeout} />
                 </div>
               </div>
               
