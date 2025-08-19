@@ -8,7 +8,7 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
+    --background: 210 20% 98%;
     --foreground: 222.2 84% 4.9%;
 
     --card: 0 0% 100%;
@@ -17,8 +17,8 @@ All colors MUST be HSL.
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    --primary: 210 100% 45%;
+    --primary-foreground: 0 0% 100%;
 
     --secondary: 210 40% 96.1%;
     --secondary-foreground: 222.2 47.4% 11.2%;
@@ -35,6 +35,22 @@ All colors MUST be HSL.
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
     --ring: 222.2 84% 4.9%;
+
+    /* Safety System Colors */
+    --safety-good: 142 76% 36%;
+    --safety-good-foreground: 0 0% 100%;
+    --safety-danger: 0 84% 60%;
+    --safety-danger-foreground: 0 0% 100%;
+    --safety-warning: 38 92% 50%;
+    --safety-warning-foreground: 0 0% 100%;
+    --safety-neutral: 215 16% 47%;
+    --safety-neutral-foreground: 0 0% 100%;
+
+    /* Industrial Theme */
+    --industrial-bg: 210 20% 98%;
+    --industrial-panel: 0 0% 100%;
+    --industrial-border: 210 20% 85%;
+    --industrial-accent: 210 100% 45%;
 
     --radius: 0.5rem;
 

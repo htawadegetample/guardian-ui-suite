@@ -52,6 +52,22 @@ export default {
 					DEFAULT: 'hsl(var(--card))',
 					foreground: 'hsl(var(--card-foreground))'
 				},
+				safety: {
+					good: 'hsl(var(--safety-good))',
+					'good-foreground': 'hsl(var(--safety-good-foreground))',
+					danger: 'hsl(var(--safety-danger))',
+					'danger-foreground': 'hsl(var(--safety-danger-foreground))',
+					warning: 'hsl(var(--safety-warning))',
+					'warning-foreground': 'hsl(var(--safety-warning-foreground))',
+					neutral: 'hsl(var(--safety-neutral))',
+					'neutral-foreground': 'hsl(var(--safety-neutral-foreground))'
+				},
+				industrial: {
+					bg: 'hsl(var(--industrial-bg))',
+					panel: 'hsl(var(--industrial-panel))',
+					border: 'hsl(var(--industrial-border))',
+					accent: 'hsl(var(--industrial-accent))'
+				},
 				sidebar: {
 					DEFAULT: 'hsl(var(--sidebar-background))',
 					foreground: 'hsl(var(--sidebar-foreground))',
