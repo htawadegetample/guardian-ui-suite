@@ -20,6 +20,13 @@ const SafetyDashboard = () => {
   const [isConnectedToPLC, setIsConnectedToPLC] = useState(true);
   const [isTimeout, setIsTimeout] = useState(false);
   
+  // Core system status
+  const [isPlatformSafe, setIsPlatformSafe] = useState(true);
+  const [isWheelbaseSet, setIsWheelbaseSet] = useState(true);
+  const [isChargerSafe, setIsChargerSafe] = useState(true);
+  const [isStageSafe, setIsStageSafe] = useState(true);
+  const [isPodSafe, setIsPodSafe] = useState(true);
+  
   // Safety signals for 2.3 PLC
   const [inputSignals, setInputSignals] = useState<SafetySignal[]>([
     { id: "e-stop-0", label: "E-Stop 0", currentState: true, category: "Emergency Systems" },
@@ -178,6 +185,11 @@ const SafetyDashboard = () => {
                 <div className="space-y-1">
                   <SafetyCondition label="System Online" status={isOnline} />
                   <SafetyCondition label="PLC Connected" status={isConnectedToPLC} />
+                  <SafetyCondition label="Platform Safe" status={isPlatformSafe} />
+                  <SafetyCondition label="Wheelbase Set" status={isWheelbaseSet} />
+                  <SafetyCondition label="Charger Safe" status={isChargerSafe} />
+                  <SafetyCondition label="Stage Safe" status={isStageSafe} />
+                  <SafetyCondition label="Pod Safe" status={isPodSafe} />
                 </div>
               </div>
               
